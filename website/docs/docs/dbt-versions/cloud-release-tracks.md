@@ -20,9 +20,29 @@ By moving your environments and jobs to "Release Tracks," you can get all the fu
 
 ## Which release track should I choose?
 
-Choose "Latest" to continuously receive new features, fixes, performance improvements — latest & greatest dbt.
+Choose "Latest" to continuously receive new features, fixes, performance improvements — latest & greatest dbt. This is the default for all customers on dbt Cloud.
 
-Select "Standard" + "Extended" if you need a less-frequent release cadence, the ability to test new dbt releases before they go live in production, and/or ongoing compatibility with the latest open source releases of dbt Core.
+Select "Compatible" + "Extended" if you need a less-frequent release cadence, the ability to test new dbt releases before they go live in production, and/or ongoing compatibility with the latest open source releases of dbt Core.
+
+## Common architectures
+
+**Default** (majority of customers on all plans)
+- Prioritize immediate access to fixes and features
+- Leave all environments on "Latest" (default configuration)
+
+**Hybrid customers** (Team & Enterprise)
+- Prioritize ongoing compatibility between dbt Cloud and dbt Core for development & deployment using both products in the same dbt projects
+- Configure all environments to use "Compatible"
+- Understand that new features will not be available until they are first released in dbt Core OSS (several months after "Latest")
+
+**Cautious customers** (Enterprise & Business Critical)
+- Prioritize "bake in" time for new features & fixes
+- Configure development & test environments to use "Compatible"
+- Configure pre-production & production environments to use "Extended"
+- Understand that new features will not be available until they are first released in dbt Core OSS + Compatible track
+
+**Virtual Private dbt or Single Tenant**
+- Changes to all release tracks roll out as part of dbt Cloud instance upgrades once per week
 
 ## Tips for upgrading {#upgrade-tips}
 
