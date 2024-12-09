@@ -1,6 +1,6 @@
 ---
-title: "IBM/watsonx Presto setup"
-description: "Read this guide to learn about the IBM/watsonx Presto setup in dbt."
+title: "IBM watsonx/Presto setup"
+description: "Read this guide to learn about the IBM watsonx/Presto setup in dbt."
 id: "watsonx-presto setup"
 meta:
   maintained_by: IBM
@@ -17,11 +17,11 @@ meta:
 ---
 
 
-The dbt-presto adapter allows you to use dbt to transform and manage data on IBM Watsonx Presto, leveraging its distributed SQL query engine capabilities. Before proceeding, ensure you have the following:
+The dbt-presto adapter allows you to use dbt to transform and manage data on IBM watsonx Presto, leveraging its distributed SQL query engine capabilities. Before proceeding, ensure you have the following:
 <ul>
   <li>An active IBM watsonx Presto Engine or Presto setup with connection details (host, port, catalog, schema).</li>
   <li>Authentication Credentials: Username and password.</li>
-  <li>SSL Certificate of the host: SSL verification is required for wxd on-prem clusters, ensure you have the path to the certificate file.</li>
+  <li>SSL Certificate of the host: SSL verification is required for watsonx.data on-prem clusters, ensure you have the path to the certificate file.</li>
 </ul>
 Refer to the Configuring dbt-presto section for guidance on obtaining and organizing these details.
 
@@ -76,7 +76,7 @@ Presto supports only BasicAuth as method currenlty. For IBM watsonx.data, You ca
 | `database`| Required | The catalog name in your presto cluster. | `Analytics` |
 |  `schema` | Required | The schema name within your presto cluster's catalog. | `my_schema`  |
 |   `port`  | Required | Port for connecting to Presto.  | `443`  |
-
+| ssl_verify | Default: **true**. Optional for watsonx.data cloud environments, but required for on-prem environments. | Specifies the path to the SSL certificate or a boolean value. | path/to/certificate or true |
 Note: For IBM Watsonx Presto cluster, the hostname and port details can be obtained from the "View Connect Details" section of the Presto engine details page.
 
 ### Schemas and databases
@@ -97,10 +97,3 @@ The following profile fields are optional to set up. They let you configure your
 | `http_headers`                | HTTP headers to send alongside requests to Presto, specified as a yaml dictionary of (header, value) pairs. | `X-Presto-Routing-Group: my-cluster` |
 | `http_scheme`                 | The HTTP scheme to use for requests to PResto   (default: `http`, or `https` if `BasicAuth`)                | `https` or `http`                    |
 
-## Limitations
-
-### Transaction mode
-Due to the nature of Presto, not all core dbt functionality is supported. The following features of dbt are not implemented on Presto:
-
-Archival
-Incremental models
