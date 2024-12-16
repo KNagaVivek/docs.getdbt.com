@@ -9,14 +9,15 @@ displayed_sidebar: "docs"
 
 - [dbt Core 1.9 changelog](https://github.com/dbt-labs/dbt-core/blob/1.9.latest/CHANGELOG.md)
 - [dbt Core CLI Installation guide](/docs/core/installation-overview)
-- [Cloud upgrade guide](/docs/dbt-versions/upgrade-dbt-version-in-cloud#versionless)
+- [Cloud upgrade guide](/docs/dbt-versions/upgrade-dbt-version-in-cloud#release-tracks)
 
 ## What to know before upgrading
 
 dbt Labs is committed to providing backward compatibility for all versions 1.x. Any behavior changes will be accompanied by a [behavior change flag](/reference/global-configs/behavior-changes#behavior-change-flags) to provide a migration window for existing projects. If you encounter an error upon upgrading, please let us know by [opening an issue](https://github.com/dbt-labs/dbt-core/issues/new).
 
-dbt Cloud is now [versionless](/docs/dbt-versions/versionless-cloud). If you have selected "Versionless" in dbt Cloud, you already have access to all the features, fixes, and other functionality that is included in dbt Core v1.9.
-For users of dbt Core, since v1.8 we recommend explicitly installing both `dbt-core` and `dbt-<youradapter>`. This may become required for a future version of dbt. For example:
+Starting in 2024, dbt Cloud provides the functionality from new versions of dbt Core via [release tracks](/docs/dbt-versions/cloud-release-tracks) with automatic upgrades. If you have selected the "Latest" release track in dbt Cloud, you already have access to all the features, fixes, and other functionality that is included in dbt Core v1.9! If you have selected the "Compatible" release track, you will have access in the next monthly "Compatible" release after the dbt Core v1.9 final release.
+
+For users of dbt Core, since v1.8, we recommend explicitly installing both `dbt-core` and `dbt-<youradapter>`. This may become required for a future version of dbt. For example:
 
 ```sql
 python3 -m pip install dbt-core dbt-snowflake
@@ -48,12 +49,16 @@ Starting in Core 1.9, you can use the new [microbatch strategy](/docs/build/incr
 - Simplified query design: Write your model query for a single batch of data. dbt will use your `event_time`, `lookback`, and `batch_size` configurations to automatically generate the necessary filters for you, making the process more streamlined and reducing the need for you to manage these details.
 - Independent batch processing: dbt automatically breaks down the data to load into smaller batches based on the specified `batch_size` and processes each batch independently, improving efficiency and reducing the risk of query timeouts. If some of your batches fail, you can use `dbt retry` to load only the failed batches.
 - Targeted reprocessing: To load a *specific* batch or batches, you can use the CLI arguments `--event-time-start` and `--event-time-end`.
+- [Automatic parallel batch execution](/docs/build/incremental-microbatch#parallel-batch-execution): Process multiple batches at the same time, instead of one after the other (sequentially) for faster processing of your microbatch models. dbt intelligently auto-detects if your batches can run in parallel, while also allowing you to manually override parallel execution with the [`concurrent_batches` config](/reference/resource-properties/concurrent_batches).
+
 
 Currently microbatch is supported on these adapters with more to come:
  * postgres
+ * redshift
  * snowflake
  * bigquery
  * spark
+ * databricks
   
 ### Snapshots improvements
 
@@ -65,8 +70,11 @@ Beginning in dbt Core 1.9, we've streamlined snapshot configuration and added a 
 - Standard `schema` and `database` configs supported: Snapshots will now be consistent with other dbt resource types. You can specify where environment-aware snapshots should be stored.
 - Warning for incorrect `updated_at` data type: To ensure data integrity, you'll see a warning if the `updated_at` field specified in the snapshot configuration is not the proper data type or timestamp.
 - Set a custom current indicator for the value of `dbt_valid_to`: Use the [`dbt_valid_to_current` config](/reference/resource-configs/dbt_valid_to_current) to set a custom indicator for the value of `dbt_valid_to` in current snapshot records (like a future date). By default, this value is `NULL`. When configured, dbt will use the specified value instead of `NULL` for `dbt_valid_to` for current records in the snapshot table. 
+- Use the [`hard_deletes`](/reference/resource-configs/hard-deletes) configuration to get more control on how to handle deleted rows from the source. Supported methods are `ignore` (default), `invalidate` (replaces legacy `invalidate_hard_deletes=true`), and `new_record`. Setting  `hard_deletes='new_record'` allows you to track hard deletes by adding a new record when row becomes "deleted" in source. 
 
 Read more about [Snapshots meta fields](/docs/build/snapshots#snapshot-meta-fields).
+
+To learn how to safely migrate existing snapshots, refer to [Snapshot configuration migration](/reference/snapshot-configs#snapshot-configuration-migration) for more information. 
 
 ### `state:modified` improvements
 
