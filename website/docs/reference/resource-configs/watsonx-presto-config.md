@@ -9,7 +9,7 @@ To use IBM watsonx.data or Presto with dbt, ensure the cluster has an attached c
 
 ## Session properties
 
-With a IBM watsonx.data, or Presto cluster, you can [set session properties](https://prestodb.io/docs/current/sql/set-session.html) to modify the current configuration for your user session.
+With a IBM watsonx.data SaaS/Software, or Presto cluster, you can [set session properties](https://prestodb.io/docs/current/sql/set-session.html) to modify the current configuration for your user session.
 
 To temporarily adjust session properties for a specific dbt model or a group of models, use a [dbt hook](/reference/resource-configs/pre-hook-post-hook). For example:
 
@@ -23,14 +23,17 @@ To temporarily adjust session properties for a specific dbt model or a group of 
 
 ## Connector properties
 
-IBM watsonx.data and Presto support various connector properties to manage how your data is represented. These properties are particularly useful for file-based connectors like Hive.
+IBM watsonx.data SaaS/Software and Presto support various connector properties to manage how your data is represented. These properties are particularly useful for file-based connectors like Hive.
 
-For details on what's supported for each supported data source, refer to either the [Presto Connectors](https://prestodb.io/docs/current/connector.html) or [watsonx.data Catalog](https://cloud.ibm.com/docs/watsonxdata?topic=watsonxdata-reg_database).
+For information on what is supported for each data source, refer to one of the following resources:
+- [Presto Connectors](https://prestodb.io/docs/current/connector.html)
+- [watsonx.data SaaS Catalog](https://cloud.ibm.com/docs/watsonxdata?topic=watsonxdata-reg_database)
+- [watsonx.data Software Catalog](https://www.ibm.com/docs/en/watsonx/watsonxdata/1.1.x?topic=components-adding-database-catalog-pair)
 
 
 ### Hive catalogs
 
-When using the Hive connector with a metastore service (HMS), ensure the following settings are configured. These settings are crucial for enabling frequently executed operations like `DROP` and `RENAME` in dbt:
+When using the Hive connector, ensure the following settings are configured. These settings are crucial for enabling frequently executed operations like `DROP` and `RENAME` in dbt:
 
 ```java
 hive.metastore-cache-ttl=0s
