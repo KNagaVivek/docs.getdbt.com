@@ -37,7 +37,7 @@ import SetUpPages from '/snippets/_setup-pages-intro.md';
 
 To connect dbt Core with Presto, you need to configure a profile in your profiles.yml file located in the .dbt/ directory of your home folder. Below is an example configuration:
 
-The parameters for setting up a connection are for IBM watsonx.data clusters. Unless specified, "cluster" will mean any of these products' clusters.
+The parameters for setting up a connection are for IBM watsonx.data SaaS and Software clusters. Unless specified, "cluster" will mean any of these products' clusters.
 
 
 <File name='~/.dbt/profiles.yml'>
@@ -45,7 +45,7 @@ The parameters for setting up a connection are for IBM watsonx.data clusters. Un
 ```yaml
 my_project:
   outputs:
-    dev:
+    software:
       type: presto
       method: BasicAuth
       user: [user]
@@ -56,7 +56,19 @@ my_project:
       port: [port number]
       threads: [1 or more]
       ssl_verify: path/to/certificate
-  target: dev
+
+    saas:
+      type: presto
+      method: BasicAuth
+      user: [user]
+      password: [api_key]
+      host: [hostname]
+      database: [database name]
+      schema: [your dbt schema]
+      port: [port number]
+      threads: [1 or more]
+
+  target: software
 
 ```
 
@@ -65,7 +77,7 @@ my_project:
 ## Host parameters
 
 The following profile fields are always required except for `user`, which is also required unless you're using the `oauth`, `oauth_console`, `cert`, or `jwt` authentication methods.
-Presto supports only BasicAuth as method currenlty. For IBM watsonx.data, You can get the hostname and port details by clicking View connect details inside the presto engine details page.
+Presto supports only BasicAuth as method currenlty. For IBM watsonx.data SaaS or Software clusters, You can get the hostname and port details by clicking View connect details inside the presto engine details page.
 
 | Option    | Required/Optional | Description | Example  |
 | --------- | ------- | ------- | ----------- |
@@ -80,7 +92,7 @@ Presto supports only BasicAuth as method currenlty. For IBM watsonx.data, You ca
 Note: For IBM Watsonx Presto cluster, the hostname and port details can be obtained from the "View Connect Details" section of the Presto engine details page.
 
 ### Schemas and databases
-When selecting the catalog and the schema, make sure the user has read and write access to both. This selection does not limit your ability to query the catalog. Instead, they serve as the default location for where tables and views are materialized. In addition, the Trino connector used in the catalog must support creating tables. This default can be changed later from within your dbt project.
+When selecting the catalog and the schema, make sure the user has read and write access to both. This selection does not limit your ability to query the catalog. Instead, they serve as the default location for where tables and views are materialized. In addition, the Presto connector used in the catalog must support creating tables. This default can be changed later from within your dbt project.
 
 ### SSL Verification
 If the Presto instance uses SSL, set ssl_verify to the path of the certificate file.
