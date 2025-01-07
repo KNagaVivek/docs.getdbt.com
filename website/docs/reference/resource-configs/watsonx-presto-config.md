@@ -1,15 +1,15 @@
 ---
-title: "IBM watsonx/Presto configurations"
+title: "IBM watsonx.data Presto configurations"
 id: "watsonx-presto-configs"
 ---
 
 ## Cluster requirements
 
-To use IBM watsonx.data or Presto with dbt, ensure the cluster has an attached catalog that allows creating, renaming, altering, and dropping objects such as tables and views. The user connecting to the cluster with dbt must have equivalent permissions for the target catalog.
+To use IBM watsonx.data Presto(java) with dbt, ensure the instance has an attached catalog that allows creating, renaming, altering, and dropping objects such as tables and views. The user connecting to the instance with dbt must have equivalent permissions for the target catalog.
 
 ## Session properties
 
-With a IBM watsonx.data SaaS/Software, or Presto cluster, you can [set session properties](https://prestodb.io/docs/current/sql/set-session.html) to modify the current configuration for your user session.
+With IBM watsonx.data SaaS/Software, or Presto cluster, you can [set session properties](https://prestodb.io/docs/current/sql/set-session.html) to modify the current configuration for your user session.
 
 To temporarily adjust session properties for a specific dbt model or a group of models, use a [dbt hook](/reference/resource-configs/pre-hook-post-hook). For example:
 
@@ -60,7 +60,7 @@ For file-based connectors, such as Hive, you can customize table materialization
 ```
 
 ## Seeds and prepared statements
-The `dbt-watsonx-presto` adapter offers comprehensive support for all [Presto datatypes](https://prestodb.io/docs/current/language/types.html) and [watsonx.data datatypes](https://www.ibm.com/support/pages/node/7157339) in seed files. However, to utilize this feature, you need to explicitly define the data types for each column in the `dbt_project.yml` file.
+The `dbt-watsonx-presto` adapter offers comprehensive support for all [Presto datatypes](https://prestodb.io/docs/current/language/types.html) and [watsonx.data Presto datatypes](https://www.ibm.com/support/pages/node/7157339) in seed files. However, to utilize this feature, you need to explicitly define the data types for each column in the `dbt_project.yml` file.
 
 To configure column data types, update your `<project_name>/dbt_project.yml` file as follows:
 
@@ -72,20 +72,20 @@ seeds:
         <col_1>: <datatype>
         <col_2>: <datatype>
 ```
-This ensures that dbt correctly interprets and applies the specified data types when loading seed data into your Presto or watsonx.data clusters.
+This ensures that dbt correctly interprets and applies the specified data types when loading seed data into your watsonx.data Presto instances.
 
 
 ## Materializations
 ### Table
 
-The `dbt-watsonx-presto` adapter helps you create and update tables through table materialization, making it easier to work with data in Presto.
+The `dbt-watsonx-presto` adapter helps you create and update tables through table materialization, making it easier to work with data in watsonx.data Presto.
 
 #### Recommendations
 - **Check Permissions:** Ensure that the necessary permissions for table creation are enabled in the catalog or schema.
-- **Check Connector Documentation:** Review Presto [connector’s documentation](https://prestodb.io/docs/current/connector.html) or watsonx.data [sql statement support](https://www.ibm.com/support/pages/node/7157339) to ensure it supports table creation and modification.
+- **Check Connector Documentation:** Review Presto [connector’s documentation](https://prestodb.io/docs/current/connector.html) or watsonx.data Presto [sql statement support](https://www.ibm.com/support/pages/node/7157339) to ensure it supports table creation and modification.
 
 #### Limitations with Some Connectors
-Certain Presto connectors, particularly read-only ones or those with restricted permissions, do not allow creating or modifying tables. If you attempt to use table materialization with these connectors, you may encounter an error like:
+Certain watsonx.data Presto connectors, particularly read-only ones or those with restricted permissions, do not allow creating or modifying tables. If you attempt to use table materialization with these connectors, you may encounter an error like:
 
 ```sh
 PrestoUserError(type=USER_ERROR, name=NOT_SUPPORTED, message="This connector does not support creating tables with data", query_id=20241206_071536_00026_am48r)
@@ -93,21 +93,17 @@ PrestoUserError(type=USER_ERROR, name=NOT_SUPPORTED, message="This connector doe
 
 ### View
 
-The `dbt-watsonx-presto` adapter supports creating views through materialization. In Presto, the default view security mode is `DEFINER`, meaning that views execute with the permissions of the user who created them. If needed, this behavior can be adjusted to use `INVOKER` mode, where views execute with the permissions of the user running them.
-
-#### Configuring View Security Modes in Presto
-To modify the view security mode in `dbt-watsonx-presto`, you can use a **pre-hook** to set the **session property** `default_view_security_mode` before creating the view. For example, to use `INVOKER` mode, you can add the following configuration in your model:
+The `dbt-watsonx-presto` adapter supports creating views using the `materialized='view'` configuration in your dbt model. By default, when you set the materialization to view, it creates a view in watsonx.data Presto.
 
 ```sql
 {{
   config(
     materialized='view',
-    pre_hook="SET SESSION default_view_security_mode='INVOKER'"
   )
 }}
 ```
 
-For more details about security modes in views, see [Security](https://prestodb.io/docs/current/sql/create-view.html#security) in the Presto docs. Additionally, consult the Presto [connector's documentation](https://prestodb.io/docs/current/connector.html) or watsonx.data [sql statement support](https://www.ibm.com/support/pages/node/7157339) to check if your connector supports view creation.
+For more details, refer to the watsonx.data [sql statement support](https://www.ibm.com/support/pages/node/7157339) or Presto [connector documentation](https://prestodb.io/docs/current/connector.html) to verify whether your connector supports view creation.
 
 
 ### Unsupported Features
