@@ -18,7 +18,7 @@ meta:
 
 The dbt-watsonx-presto adapter allows you to use dbt to transform and manage data on IBM watsonx.data Presto(Java), leveraging its distributed SQL query engine capabilities. The configuration and connection setup described here are also applicable to open-source Presto. Before proceeding, ensure you have the following:
 <ul>
-  <li>An active IBM watsonx.data Presto(Java) Engine with connection details (host, port, catalog, schema).</li>
+  <li>An active IBM watsonx.data Presto(Java) Engine with connection details (host, port, catalog, schema) in SaaS/Software.</li>
   <li>Authentication Credentials: Username and password/apikey.</li>
   <li>For watsonx.data instances, SSL verification is required for secure connections. If the instance host uses HTTPS, there is no need to specify the SSL certificate parameter. However, if the instance host uses an unsecured HTTP connection, ensure you provide the path to the SSL certificate file.</li>
 </ul>
@@ -80,8 +80,8 @@ The following profile fields are required for configuring watsonx.data Presto(ja
 |   `user`  | Required | Username or email for authentication. | `user` |
 | `password`| Required (if `method` is `BasicAuth`) | Password or API key for authentication | `password` |
 |   `host`  | Required | Hostname for connecting to Presto. | `127.0.0.1` |
-| `database`| Required | The catalog name in your presto cluster. | `Analytics` |
-|  `schema` | Required | The schema name within your presto cluster's catalog. | `my_schema`  |
+| `database`| Required | The catalog name in your presto instance. | `Analytics` |
+|  `schema` | Required | The schema name within your presto instance catalog. | `my_schema`  |
 |   `port`  | Required | Port for connecting to Presto.  | `443`  |
 | ssl_verify | Optional (default: **true**) | Specifies the path to the SSL certificate or a boolean value. The SSL certificate path is required if the watsonx.data instance is not secure (HTTP).| `path/to/certificate` or `true` |
 
@@ -95,12 +95,12 @@ When selecting the catalog and the schema, make sure the user has read and write
 
 ## Additional parameters
 
-The following profile fields are optional to set up. They let you configure your cluster's session and dbt for your connection. 
+The following profile fields are optional to set up. They let you configure your instance session and dbt for your connection. 
 
 
 | Profile field                 |  Description                                                                                                | Example                              |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------ |
 | `threads`                     | How many threads dbt should use (default is `1`)                                                            | `8`                                  |
-| `http_headers`                | HTTP headers to send alongside requests to Presto, specified as a yaml dictionary of (header, value) pairs. | `X-Presto-Routing-Group: my-cluster` |
+| `http_headers`                | HTTP headers to send alongside requests to Presto, specified as a yaml dictionary of (header, value) pairs. | `X-Presto-Routing-Group: my-instance` |
 | `http_scheme`                 | The HTTP scheme to use for requests to    (default: `http`, or `https` if `BasicAuth`)                | `https` or `http`                    |
 
