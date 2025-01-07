@@ -3,13 +3,13 @@ title: "IBM watsonx.data Presto configurations"
 id: "watsonx-presto-configs"
 ---
 
-## Cluster requirements
+## Instance requirements
 
 To use IBM watsonx.data Presto(java) with dbt, ensure the instance has an attached catalog that allows creating, renaming, altering, and dropping objects such as tables and views. The user connecting to the instance with dbt must have equivalent permissions for the target catalog.
 
 ## Session properties
 
-With IBM watsonx.data SaaS/Software, or Presto cluster, you can [set session properties](https://prestodb.io/docs/current/sql/set-session.html) to modify the current configuration for your user session.
+With IBM watsonx.data SaaS/Software, or Presto instance, you can [set session properties](https://prestodb.io/docs/current/sql/set-session.html) to modify the current configuration for your user session.
 
 To temporarily adjust session properties for a specific dbt model or a group of models, use a [dbt hook](/reference/resource-configs/pre-hook-post-hook). For example:
 
